@@ -136,6 +136,15 @@ namespace AsterNET.Manager
 					while (!string.IsNullOrEmpty(mrReader.lineBuffer) && (idx = mrReader.lineBuffer.IndexOf('\n')) >= 0)
 					{
 						line = idx > 0 ? mrReader.lineBuffer.Substring(0, idx).Trim() : string.Empty;
+
+						//try fix "last line\r\n--END COMMAND--"
+						var idx2 = line.IndexOf(@"\r\n--END COMMAND--");
+						if (idx2 >= 0)
+						{
+							line = idx2 > 0 ? mrReader.lineBuffer.Substring(0, idx2).Trim() : string.Empty;
+							idx = idx2 + 3;
+						}
+
 						mrReader.lineBuffer = (idx + 1 < mrReader.lineBuffer.Length
 							? mrReader.lineBuffer.Substring(idx + 1)
 							: string.Empty);
